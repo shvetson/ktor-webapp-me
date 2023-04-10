@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>View an article</title>
+</head>
+<body style="text-align: center; font-family: sans-serif">
+<h3><i>Обзор статьи</i></h3>
+<hr>
+
+<div>
+    <h4 th:text= "${article.title}"></h4>
+    <p th:text="${article.body}"></p>
+
+    <hr>
+    <p> <a th:href="@{{id}/edit(id=${article.id})}">Редактирование</a> </p>
+    <p> <a href="/api/v1/articles">Главная</a> </p>
+</div>
+
+</body>
+</html>
