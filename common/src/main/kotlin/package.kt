@@ -1,1 +1,1 @@
-package ru.shvets.kafka.model
+package ru.shvets.common

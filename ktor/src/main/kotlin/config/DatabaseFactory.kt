@@ -10,10 +10,7 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.shvets.kafka.model.entity.Cities
-import ru.shvets.kafka.model.entity.City
-import ru.shvets.kafka.model.entity.People
-import ru.shvets.kafka.model.entity.Person
+import ru.shvets.common.model.*
 import ru.shvets.ktor.config.Log.logger
 
 /**
@@ -56,7 +53,7 @@ object DatabaseFactory {
 
         transaction(database) {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create (Cities, People)
+            SchemaUtils.create (Cities, Addresses, People, Users)
         }
     }
 

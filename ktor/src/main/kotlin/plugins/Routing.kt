@@ -11,21 +11,13 @@ import ru.shvets.ktor.routes.*
 fun Application.configureRouting() {
 
     routing {
-
         static("/static") {
             resources("files")
         }
 
         route("/api/v1") {
+            peopleRouting()
 
-            route("") {
-                customerRouting()
-                listOrderRoute()
-                getOrderRoute()
-                totalizeOrderRoute()
-            }
-
-            articleRouting()
         }
     }
 

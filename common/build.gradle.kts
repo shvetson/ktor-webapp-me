@@ -1,15 +1,18 @@
 val ktormVersion: String by project
 val datetimeVersion: String by project
 val exposedVersion: String by project
+val kotlinVersionSerialization: String by project
 
 plugins {
     kotlin("jvm")
     id("io.ktor.plugin")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.5.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinVersionSerialization")
 
 //    implementation("org.ktorm:ktorm-core:$ktormVersion")
 
@@ -19,4 +22,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+
+    implementation("org.jetbrains.exposed:exposed-java-time:0.40.1")
 }

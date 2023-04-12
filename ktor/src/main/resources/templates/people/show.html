@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>View a person</title>
+</head>
+<body style="text-align: center; font-family: sans-serif">
+<h3><i>Данные о персоне</i></h3>
+<hr>
+
+<div>
+    <h4 th:text= "${person.firstName}">First Name</h4>
+    <p th:text="${person.lastName}">Last Name</p>
+    <p th:text="${person.dateOfBirth}">Date of birth</p>
+
+    <hr>
+    <p> <a th:href="@{{id}/edit(id=${person.id})}">Редактирование</a> </p>
+    <p> <a href="/api/v1/people">Главная</a> </p>
+</div>
+
+</body>
+</html>
