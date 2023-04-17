@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.Table
+import ru.shvets.common.model.People.autoIncrement
 
 /**
  * @author  Oleg Shvets
@@ -17,6 +18,8 @@ data class City(
     val name: String,
 )
 
-object Cities : LongIdTable() {
-    val name = varchar("name", 50).isNotNull()
+object Cities : Table("cities") {
+    val id = long("id").autoIncrement()
+    val name = varchar("name", 50)
+    override val primaryKey = PrimaryKey(id)
 }

@@ -1,55 +1,17 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/html"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit article</title>
+<head th:replace="~{fragments/layout :: headerFragment}">
+    <title id="pageTitle">Edit person</title>
 </head>
+
 <body style="text-align: left; font-family: sans-serif">
-<h3>Редактирование данных</h3>
+<h3 class="text-center">Редактирование данных</h3>
 <hr>
 
-<div>
-    <form th:method="post" th:action="@{~/api/v1/people/{id}(id=${person.id})}" th:object="${person}">
-        <label for="firstName">Имя: </label>
-        <input type="text" id="firstName" th:value="${person.firstName}" th:name="firstName">
-        <br/>
-
-        <label for="lastName">Фамилия: </label>
-        <input type="text" id="lastName" th:value="${person.lastName}" th:name="lastName">
-        <br/>
-
-        <label for="dateOfBirth">Дата рождения: </label>
-        <input type="date" id="dateOfBirth" th:value="${person.dateOfBirth}" th:name="dateOfBirth">
-        <br/>
-
-        <label for="phone">Телефон: </label>
-        <input type="tel" id="phone" th:value="${person.phone}" th:name="phone"
-               value="+7(___)___-__-__"
-               pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" required>
-        <br/><small>формат: +7(912) 456-78-90</small>
-        <br/>
-
-<!--        <label for="body">Очерк: </label>-->
-<!--        &lt;!&ndash;    <input type="text" id="body" th:value="${article.body}" th:name="body">&ndash;&gt;-->
-<!--        <textarea name="body" id="body" th:text="${article.body}" th:name="body"></textarea>-->
-
-        <input type="submit" name="_action" value="update">
+<div class="container">
+    <form th:replace="~{fragments/formPerson ::formFragment(url=@{~/api/v1/people/{id}(id=${person.id})})}">
     </form>
 </div>
 
-<div>
-    <form th:method="post" th:action="@{~/api/v1/people/{id}(id=${person.id})}">
-        <p>
-            <input type="submit" name="_action" value="delete">
-        </p>
-    </form>
-</div>
-
-<hr>
-<p>
-    <a href="/api/v1/people">Главная</a>
-</p>
+<div th:insert="~{fragments/layout :: copyright}"></div>
+<th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
 </html>

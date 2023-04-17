@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/html"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <meta charset="UTF-8">
-    <title>View a person</title>
+<head th:replace="~{fragments/layout :: headerFragment}">
+    <title id="pageTitle">Edit person</title>
 </head>
-<body style="text-align: center; font-family: sans-serif">
-<h3><i>Данные о персоне</i></h3>
+
+<body style="text-align: left; font-family: sans-serif">
+<h3 class="text-center">Информация</h3>
 <hr>
 
-<div>
-    <h4 th:text= "${person.firstName}">First Name</h4>
-    <p th:text="${person.lastName}">Last Name</p>
-    <p th:text="${person.dateOfBirth}">Date of birth</p>
-
-    <hr>
-    <p> <a th:href="@{{id}/edit(id=${person.id})}">Редактирование</a> </p>
-    <p> <a href="/api/v1/people">Главная</a> </p>
+<div class="container">
+    <div>
+        <h4 th:text="${person.lastName}">First Name</h4>
+        <p th:text="${person.firstName}">Last Name</p>
+        <p th:text="${person.dateOfBirth}">Date of birth</p>
+    </div>
+        <hr>
+    <div>
+        <a th:href="@{~/api/v1/people}" class="btn btn-secondary btn-sm mb-3">Back</a>
+    </div>
 </div>
 
+<div th:insert="~{fragments/layout :: copyright}"></div>
+<th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
 </html>

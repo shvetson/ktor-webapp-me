@@ -1,6 +1,7 @@
 package ru.shvets.common.model
 
 import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.date

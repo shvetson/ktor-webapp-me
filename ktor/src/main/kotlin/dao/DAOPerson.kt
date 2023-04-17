@@ -1,6 +1,7 @@
 package ru.shvets.ktor.dao
 
 import ru.shvets.common.model.Person
+import ru.shvets.common.model.PersonWithAddress
 
 /**
  * @author  Oleg Shvets
@@ -9,9 +10,12 @@ import ru.shvets.common.model.Person
  */
 
 interface DAOPerson {
+    suspend fun getAllPeopleAddress(): List<PersonWithAddress>
     suspend fun getAllPeople(): List<Person>
     suspend fun getPerson(id: Long): Person?
-    suspend fun addPerson(firstName: String, lastName: String, dateOfBirth: String, phone: String,): Person?
-    suspend fun editPerson(id: Long, firstName: String, lastName: String, dateOfBirth: String, phone: String,): Boolean
+    suspend fun getPersonAddress(id: Long): PersonWithAddress?
+    suspend fun addPerson(firstName: String, lastName: String, dateOfBirth: String, phone: String, addressId: Long): Person?
+    suspend fun addPerson(person: Person, addressId: Long): Person?
+    suspend fun editPerson(id: Long, firstName: String, lastName: String, dateOfBirth: String, phone: String, addressId: Long): Boolean
     suspend fun deletePerson(id: Long): Boolean
 }

@@ -1,25 +1,77 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/html"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <meta charset="UTF-8">
-    <title>People journal</title>
+<head th:replace="~{fragments/layout :: headerFragment}">
+    <title id="pageTitle">List</title>
 </head>
 <body style="text-align: center; font-family: sans-serif">
-<h3><i>Список персон</i></h3>
-<hr>
 
-<span th:if="${people.isEmpty()}">Список пуст!</span>
+<div class="container">
+    <h3 class="text-center">Список персон</h3>
+    <hr>
+    <span th:if="${people.isEmpty()}">Список пуст!</span>
 
-<div th:each="person, iterStat: ${people}">
-    <a th:href="@{people/{id}(id=${person.id})}"
-       th:text="${iterStat.index+1} + '. ' + ${person.firstName} + ' ' + ${person.lastname}">Person</a>
+    <table class="table-responsive table-secondary table-bordered table-striped caption-top">
+        <caption>Список</caption>
+        <thead style="text-align: center;">
+        <th scope="col" style="padding-left: 10px; padding-right: 10px;">#</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Фамилия</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Имя</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Дата рождения</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Телефон
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Город</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Улица</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Дом</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Строение</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Квартира</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Действия</th>
+        </thead>
+        <tbody>
+        <div th:each="person, iterStat : ${people}">
+            <tr style="text-align: center">
+                <td><a th:href="@{people/{id}(id=${person.id})}" th:text="${iterStat.index + 1}"></a></td>
+                <td th:text="${person.lastName}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.firstName}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.dateOfBirth}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.phone}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.city}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.street}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.house}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.building}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${person.flat}"
+                    style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td>
+                    <div class="dropdown">
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                            <i class="bx bx-dots-vertical-rounded"></i></button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{people/{id}/edit(id=${person.id})}"><i
+                                    class="bx bx-edit-alt me-1"></i>Edit</a>
+                            <a class="dropdown-item" th:href="@{people/{id}/delete(id=${person.id})}"><i
+                                    class="bx bx-trash me-1"></i>Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+        <tfoot>
+        <td colspan="11">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a th:href="@{people/new}"
+                   class="btn btn-sm btn-primary justify-content-md-end">Add</a>
+            </div>
+        </td>
+        </tfoot>
+    </table>
 </div>
 
-<hr>
-<p>
-    <a th:href="@{people/new}">Новый</a>
-</p>
+<div th:insert="~{fragments/layout :: copyright}"></div>
+<th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
 </html>
