@@ -47,23 +47,6 @@ class DAOPersonImpl : DAOPerson {
         }
     }
 
-    override suspend fun addPerson(
-        firstName: String,
-        lastName: String,
-        dateOfBirth: String,
-        phone: String,
-        addressId: Long,
-    ): Person? = dbQuery {
-        val insertStatement = People.insert {
-            it[People.firstName] = firstName
-            it[People.lastName] = lastName
-            it[People.dateOfBirth] = dateOfBirth.fromStringToLocalDate()
-            it[People.phone] = phone
-            it[People.addressId] = addressId
-        }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToPerson)
-    }
-
     override suspend fun addPerson(person: Person, addressId: Long): Person? = dbQuery {
         val insertStatement = People.insert {
             it[People.firstName] = person.firstName
@@ -75,20 +58,13 @@ class DAOPersonImpl : DAOPerson {
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToPerson)
     }
 
-    override suspend fun editPerson(
-        id: Long,
-        firstName: String,
-        lastName: String,
-        dateOfBirth: String,
-        phone: String,
-        addressId: Long,
-    ): Boolean = dbQuery {
+    override suspend fun editPerson(id: Long, person: Person, addressId: Long): Boolean = dbQuery {
         People.update({ People.id eq id }) {
-            it[People.firstName] = firstName
-            it[People.lastName] = lastName
-            it[People.dateOfBirth] = dateOfBirth.fromStringToLocalDate()
-            it[People.phone] = phone
-//            it[People.addressId] = addressId
+            it[People.firstName] = person.firstName
+            it[People.lastName] = person.lastName
+            it[People.dateOfBirth] = person.dateOfBirth?.toLocalDateTime(TimeZone.currentSystemDefault())?.date?.toJavaLocalDate()
+            it[People.phone] = person.phone
+            it[People.addressId] = addressId
         } > 0
     }
 
@@ -96,9 +72,7 @@ class DAOPersonImpl : DAOPerson {
         People.deleteWhere { People.id eq id } > 0
     }
 
-    private fun resultRowToPerson(
-        row: ResultRow,
-    ): Person {
+    private fun resultRowToPerson(row: ResultRow): Person {
         return Person(
             id = row[People.id],
             firstName = row[People.firstName],
@@ -109,9 +83,7 @@ class DAOPersonImpl : DAOPerson {
         )
     }
 
-    private fun resultRowToPersonAddress(
-        row: ResultRow,
-    ): PersonWithAddress {
+    private fun resultRowToPersonAddress(row: ResultRow): PersonWithAddress {
         return PersonWithAddress(
             id = row[People.id],
             firstName = row[People.firstName],

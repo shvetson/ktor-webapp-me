@@ -2,8 +2,6 @@ package ru.shvets.ktor.utils
 
 import io.ktor.http.*
 import io.ktor.server.util.*
-import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDate
 import ru.shvets.common.model.Address
 import ru.shvets.common.model.Person
 import ru.shvets.common.util.fromLocalDateToKotlinInstant
@@ -15,7 +13,6 @@ fun createPerson(formParameters: Parameters): Person {
         lastName = formParameters.getOrFail("lastName"),
         dateOfBirth = formParameters.getOrFail("dateOfBirth").fromStringToLocalDate().fromLocalDateToKotlinInstant(),
         phone = formParameters.getOrFail("phone"),
-        addressId = 0L
     )
 }
 

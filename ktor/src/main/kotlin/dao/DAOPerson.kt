@@ -14,8 +14,7 @@ interface DAOPerson {
     suspend fun getAllPeople(): List<Person>
     suspend fun getPerson(id: Long): Person?
     suspend fun getPersonAddress(id: Long): PersonWithAddress?
-    suspend fun addPerson(firstName: String, lastName: String, dateOfBirth: String, phone: String, addressId: Long): Person?
     suspend fun addPerson(person: Person, addressId: Long): Person?
-    suspend fun editPerson(id: Long, firstName: String, lastName: String, dateOfBirth: String, phone: String, addressId: Long): Boolean
+    suspend fun editPerson(id: Long, person: Person, addressId: Long): Boolean
     suspend fun deletePerson(id: Long): Boolean
 }

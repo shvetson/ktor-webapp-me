@@ -22,7 +22,7 @@ data class Person(
     val lastName: String,
     val dateOfBirth: Instant? = Instant.NONE,
     val phone: String? = null,
-    val addressId: Long? = null
+    val addressId: Long? = null,
 )
 
 object People : Table("people") {

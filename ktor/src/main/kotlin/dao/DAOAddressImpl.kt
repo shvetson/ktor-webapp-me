@@ -2,63 +2,33 @@ package ru.shvets.ktor.dao
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.statements.StatementContext
 import ru.shvets.common.model.*
 import ru.shvets.ktor.config.DatabaseFactory.dbQuery
 
 class DAOAddressImpl : DAOAddress {
-
-    override suspend fun addAddress(
-        postCode: Int,
-        region: String,
-        city: String,
-        street: String,
-        house: String,
-        building: String,
-        flat: String,
-    ): Address? = dbQuery {
-        val insertStatement = Addresses.insert {
-            it[Addresses.postCode] = postCode
-            it[Addresses.region] = region
-            it[Addresses.city] = city
-            it[Addresses.street] = street
-            it[Addresses.house] = house
-            it[Addresses.building] = building
-            it[Addresses.flat] = flat
-        }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToAddress)
-    }
-
     override suspend fun addAddress(address: Address): Address? = dbQuery {
         val insertStatement = Addresses.insert {
-            it[Addresses.postCode] = address.postCode
-            it[Addresses.region] = address.region
-            it[Addresses.city] = address.city
-            it[Addresses.street] = address.street
-            it[Addresses.house] = address.house
-            it[Addresses.building] = address.building
-            it[Addresses.flat] = address.flat
+            it[postCode] = address.postCode
+            it[region] = address.region
+            it[city] = address.city
+            it[street] = address.street
+            it[house] = address.house
+            it[building] = address.building
+            it[flat] = address.flat
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToAddress)
     }
 
-    override suspend fun editAddress(
-        id: Long,
-        postCode: Int,
-        region: String,
-        city: String,
-        street: String,
-        house: String,
-        building: String,
-        flat: String,
-    ): Boolean = dbQuery {
+    override suspend fun editAddress(id: Long, address: Address): Boolean = dbQuery {
         Addresses.update({ Addresses.id eq id }) {
-            it[Addresses.postCode] = postCode
-            it[Addresses.region] = region
-            it[Addresses.city] = city
-            it[Addresses.street] = street
-            it[Addresses.house] = house
-            it[Addresses.building] = building
-            it[Addresses.flat] = flat
+            it[postCode] = address.postCode
+            it[region] = address.region
+            it[city] = address.city
+            it[street] = address.street
+            it[house] = address.house
+            it[building] = address.building
+            it[flat] = address.flat
         } > 0
     }
 
@@ -66,9 +36,7 @@ class DAOAddressImpl : DAOAddress {
         Addresses.deleteWhere { Addresses.id eq id } > 0
     }
 
-    private fun resultRowToAddress(
-        row: ResultRow,
-    ): Address {
+    private fun resultRowToAddress(row: ResultRow): Address {
         return Address(
             id = row[Addresses.id],
             postCode = row[Addresses.postCode],

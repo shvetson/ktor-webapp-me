@@ -9,28 +9,7 @@ import ru.shvets.common.model.Address
  */
 
 interface DAOAddress {
-    suspend fun addAddress(
-        postCode: Int,
-        region: String,
-        city: String,
-        street: String,
-        house: String,
-        building: String,
-        flat: String,
-    ): Address?
-
     suspend fun addAddress(address: Address): Address?
-
-    suspend fun editAddress(
-        id: Long,
-        postCode: Int,
-        region: String,
-        city: String,
-        street: String,
-        house: String,
-        building: String,
-        flat: String
-    ): Boolean
-
+    suspend fun editAddress(id: Long, address: Address): Boolean
     suspend fun deleteAddress(id: Long): Boolean
 }

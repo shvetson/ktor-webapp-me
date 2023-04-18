@@ -28,12 +28,6 @@ fun Route.peopleRouting() {
             call.respond(ThymeleafContent("/people/index.html", model))
         }
 
-//        get("") {
-//            val people = daoPerson.getAllPeople().map { it.toDto() }
-//            val model = mapOf("people" to people)
-//            call.respond(ThymeleafContent("/people/index.html", model))
-//        }
-
         get("new") {
             val model = emptyMap<String, Any>()
             call.respond(ThymeleafContent("/people/new.html", model))
@@ -43,10 +37,10 @@ fun Route.peopleRouting() {
             val formParameters = call.receiveParameters()
             val personFromParam = createPerson(formParameters)
             val addressFromParam = createAddress(formParameters)
+
             val address = daoAddress.addAddress(addressFromParam)
-            val person = address?.let { it -> daoPerson.addPerson(personFromParam, it.id) }
+            address?.let { daoPerson.addPerson(personFromParam, it.id) }
             call.respondRedirect("/api/v1/people")
-//            call.respondRedirect("/api/v1/people/${person?.id}")
         }
 
         get("{id}") {
@@ -67,41 +61,18 @@ fun Route.peopleRouting() {
 
         post("{id}") {
             val id = call.parameters.getOrFail<Long>("id").toLong()
+            var addressId = daoPerson.getPerson(id)?.addressId ?: 0L
+
             val formParameters = call.receiveParameters()
+            val personFromParam = createPerson(formParameters)
+            val addressFromParam = createAddress(formParameters)
 
-            when (formParameters.getOrFail("_action")) {
-                "save" -> {
-                    val firstName = formParameters.getOrFail("firstName")
-                    val lastName = formParameters.getOrFail("lastName")
-                    val dateOfBirth = formParameters.getOrFail("dateOfBirth")
-                    val phone = formParameters.getOrFail("phone")
+            //добавить - проверка на ввод данных по адресу
+            if (addressId == 0L) { addressId = daoAddress.addAddress(addressFromParam)?.id ?: 0L }
+            else { daoAddress.editAddress(addressId, addressFromParam) }
 
-                    val addressId = daoPerson.getPerson(id)?.addressId ?: 0L
-                    val postCode = formParameters.getOrFail("postCode").toIntOrNull() ?: 0
-                    val region = formParameters.getOrFail("region")
-                    val city = formParameters.getOrFail("city")
-                    val street = formParameters.getOrFail("street")
-                    val house = formParameters.getOrFail("house")
-                    val building = formParameters.getOrFail("building")
-                    val flat = formParameters.getOrFail("flat")
-
-                    if (addressId == 0L) {
-                        val address = daoAddress.addAddress(postCode, region, city, street, house, building, flat)
-                        address?.let { it -> daoPerson.addPerson(firstName, lastName, dateOfBirth, phone, it.id) }
-                    } else {
-                        daoAddress.editAddress(addressId, postCode, region, city, street, house, building, flat)
-                    }
-
-                    daoPerson.editPerson(id, firstName, lastName, dateOfBirth, phone, addressId)
-                    call.respondRedirect("/api/v1/people")
-//                    call.respondRedirect("/api/v1/articles/$id")
-                }
-
-                "delete" -> {
-                    daoPerson.deletePerson(id)
-                    call.respondRedirect("/api/v1/people")
-                }
-            }
+            daoPerson.editPerson(id, personFromParam, addressId)
+            call.respondRedirect("/api/v1/people")
         }
 
         get("{id}/delete") {
