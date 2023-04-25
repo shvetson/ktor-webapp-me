@@ -17,6 +17,7 @@ fun Application.configureRouting() {
 
         route("/api/v1") {
             peopleRouting()
+            contactsRouting()
 
         }
     }

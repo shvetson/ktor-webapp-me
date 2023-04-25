@@ -1,118 +1,128 @@
 <form th:fragment="formFragment" th:action="${url}" th:object="${person}" method="post">
 
+<!--    Общая инфо-->
+    <h5 class="text-left"><b>Персона</b></h5>
     <div class="mb-3 row">
-        <label for="firstName" class="col-sm-2 col-form-label">Имя: </label>
-        <div class="col-sm-10">
+        <label for="firstName" class="col-sm-1 col-form-label">Имя: </label>
+        <div class="col-sm-3">
             <input class="form-control" type="text" id="firstName" th:name="firstName"
                    th:value="${person != null} ? ${person.firstName} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="lastName" class="col-sm-2 col-form-label">Фамилия: </label>
-        <div class="col-sm-10">
+        <label for="lastName" class="col-sm-1 col-form-label">Фамилия: </label>
+        <div class="col-sm-3">
             <input class="form-control" type="text" id="lastName" th:name="lastName"
                    th:value="${person != null} ? ${person.lastName} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
         <label for="dateOfBirth" class="col-sm-2 col-form-label">Дата рождения: </label>
-        <div class="col-sm-10">
+        <div class="col-sm-2">
             <input class="form-control" type="date" id="dateOfBirth" th:name="dateOfBirth"
                    th:value="${person != null} ? ${person.dateOfBirth} : ''" required>
             <div id="dateOfBirthHelp" class="form-text">Формат: мм/дд/гггг</div>
         </div>
     </div>
 
-    <div class="mb-3 row">
-        <label for="phone" class="col-sm-2 col-form-label">Телефон: </label>
-        <div class="col-sm-10">
-            <input class="form-control" type="tel" id="phone" th:name="phone"
-                   th:value="${person != null} ? ${person.phone} : ''"
-                   pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" required>
-            <div id="phoneHelp" class="form-text">Формат: +7(912)456-78-90</div>
-        </div>
-    </div>
+    <!--    <div class="mb-3 row">-->
+    <!--        <label for="phone" class="col-sm-2 col-form-label">Телефон: </label>-->
+    <!--        <div class="col-sm-10">-->
+    <!--            <input class="form-control" type="tel" id="phone" th:name="phone"-->
+    <!--                   th:value="${person != null} ? ${person.phone} : ''"-->
+    <!--                   pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}" required>-->
+    <!--            <div id="phoneHelp" class="form-text">Формат: +7(912)456-78-90</div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
+<!--    Адрес-->
     <hr/>
-
+    <h5 class="text-left"><b>Адрес</b></h5>
     <div class="mb-3 row">
-        <label for="postCode" class="col-sm-2 col-form-label">Почтовый индекс: </label>
-        <div class="col-sm-10">
+        <label for="postCode" class="col-sm-1 col-form-label">Индекс: </label>
+        <div class="col-sm-2">
             <input class="form-control" type="text" id="postCode" th:name="postCode"
                    th:value="${person != null} ? ${person.postCode} : ''"
                    pattern="\d{6}" required>
             <div id="postCodeHelp" class="form-text">Должно быть 6 цифр</div>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="region" class="col-sm-2 col-form-label">Регион: </label>
-        <div class="col-sm-10">
+        <label for="region" class="col-sm-1 col-form-label">Регион: </label>
+        <div class="col-sm-4">
             <input class="form-control" type="text" id="region" th:name="region"
                    th:value="${person != null} ? ${person.region} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="city" class="col-sm-2 col-form-label">Город: </label>
-        <div class="col-sm-10">
+        <label for="city" class="col-sm-1 col-form-label">Город: </label>
+        <div class="col-sm-3">
             <input class="form-control" type="text" id="city" th:name="city"
                    th:value="${person != null} ? ${person.city} : ''" required>
         </div>
     </div>
 
-    <!--    <div class="mb-3 row">-->
-    <!--        <label for="city" class="col-sm-2 col-form-label">Город: </label>-->
-    <!--        <div class="col-sm-10">-->
-    <!--            <select class="form-select" id="city" th:name="cityId" required>-->
-    <!--                <option th:if="${person == null}" selected disabled value="">Выберите ...</option>-->
-    <!--                <option th:if="${person != null} " selected disabled value="" th:text="${person.cityName}"></option>-->
-    <!--                <option th:each="city : ${cities}"-->
-    <!--                        th:value="${city.id}"-->
-    <!--                        th:utext="${city.name}"></option>-->
-    <!--            </select>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <div class="mb-3 row">
-        <label for="street" class="col-sm-2 col-form-label">Улица: </label>
-        <div class="col-sm-10">
+        <label for="street" class="col-sm-1 col-form-label">Улица: </label>
+        <div class="col-sm-5">
             <input class="form-control" type="text" id="street" th:name="street"
                    th:value="${person != null} ? ${person.street} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="house" class="col-sm-2 col-form-label">Дом: </label>
-        <div class="col-sm-10">
+        <label for="house" class="col-sm-1 col-form-label">Дом: </label>
+        <div class="col-sm-1">
             <input class="form-control" type="text" id="house" th:name="house"
                    th:value="${person != null} ? ${person.house} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="building" class="col-sm-2 col-form-label">Корпус: </label>
-        <div class="col-sm-10">
+        <label for="building" class="col-sm-1 col-form-label">Корпус: </label>
+        <div class="col-sm-1">
             <input class="form-control" type="text" id="building" th:name="building"
                    th:value="${person != null} ? ${person.building} : ''" required>
         </div>
-    </div>
 
-    <div class="mb-3 row">
-        <label for="flat" class="col-sm-2 col-form-label">Квартира: </label>
-        <div class="col-sm-10">
+        <label for="flat" class="col-sm-1 col-form-label">Квартира: </label>
+        <div class="col-sm-1">
             <input class="form-control" type="text" id="flat" th:name="flat"
                    th:value="${person != null} ? ${person.flat} : ''" required>
         </div>
     </div>
 
+<!--    Контакты-->
     <hr/>
+    <h5 class="text-left"><b>Контакты</b></h5>
+    <div class="mb-3 row">
+<!--    typeId-->
+        <label for="typeId" class="col-sm-1 col-form-label">Вид: </label>
+        <div class="col-sm-2">
+            <select class="form-select" id="typeId" th:name="typeId" required>
+                <option selected disabled value="">Выберите ...</option>
+                <option th:each="type : ${contactsTypes}"
+                        th:value="${type.id}"
+                        th:text="${type.name}"></option>
+            </select>
+        </div>
+<!--    data-->
+        <label for="data" class="col-sm-1 col-form-label">Данные: </label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" id="data" th:name="data">
+            <div id="contactHelp" class="form-text">Формат: +7(912)456-78-90 или person@mail.com или @person></div>
+        </div>
 
+    </div>
+
+    <hr/>
     <div>
-        <button type="submit" class="btn btn-primary btn-sm mb-3" name="_action" value="save">Save</button>
+        <button type="submit" class="btn btn-primary mb-3" name="_action" value="save">Save</button>
         <!--    <button th:if="${person != null}" type="submit" class="btn btn-danger mb-3" name="_action" value="delete">Delete</button>-->
-        <a th:href="@{~/api/v1/people}" class="btn btn-secondary btn-sm mb-3">Back</a>
+        <a th:href="@{~/api/v1/people}" class="btn btn-secondary mb-3">Back</a>
     </div>
 </form>
+
+<!--<form id="outer-form" class="form-horizontal form" th:action="@{/urlOuter}" th:object="${myBackBeanObject}" method="post">-->
+<!--    <fieldset id="form-fieldset1">-->
+<!--        <button id="save1" name="save" class="btn btn-primary">Outer Save</button>-->
+<!--    </fieldset>-->
+<!--</form>-->
+
+<!--<form id="inner-form" class="form-horizontal form" th:action="@{/urlInner}" th:object="${myBackBeanObject}" method="post">-->
+<!--    <fieldset id="form-fieldset2">-->
+<!--        <button id="save2" name="save" class="btn btn-primary">inner Save</button>-->
+<!--    </fieldset>-->
+<!--</form>-->

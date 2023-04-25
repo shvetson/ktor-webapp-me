@@ -1,102 +1,129 @@
 package ru.shvets.ktor.dao
 
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDate
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import ru.shvets.common.dto.ContactDto
+import ru.shvets.common.dto.PersonDto
+import ru.shvets.common.dto.PersonWithAddressDto
 import ru.shvets.common.model.*
 import ru.shvets.common.util.fromKotlinInstantToLocalDateString
 import ru.shvets.common.util.fromLocalDateToKotlinInstant
 import ru.shvets.common.util.fromStringToLocalDate
 import ru.shvets.ktor.config.DatabaseFactory.dbQuery
+import ru.shvets.ktor.mapper.toContactDto
+import ru.shvets.ktor.mapper.toContactsType
+import ru.shvets.ktor.mapper.toPersonDto
 
 class DAOPersonImpl : DAOPerson {
 
-    override suspend fun getAllPeopleAddress(): List<PersonWithAddress> {
+    override suspend fun getAllPeopleAddress(): List<PersonWithAddressDto> { // не используется
         return dbQuery {
-            (People leftJoin Addresses)
+            (PersonTable leftJoin AddressTable)
                 .selectAll()
                 .map(::resultRowToPersonAddress)
         }
     }
 
-    override suspend fun getAllPeople(): List<Person> {
+    override suspend fun getAllPeople(): List<PersonDto> {
         return dbQuery {
-            People
+            PersonTable
                 .selectAll()
-                .map(::resultRowToPerson)
+                .map(::resultRowToPersonDto)
         }
     }
 
-    override suspend fun getPerson(id: Long): Person? {
+//    override suspend fun getPerson(id: Long): Person? {
+//        return dbQuery {
+//
+//            val contacts = ContactTable
+//                .select(ContactTable.personId eq id)
+//                .map {
+//                    Contact(
+//                        id = it[ContactTable.id].value,
+//                        type = ContactType.valueOf(it[ContactTable.type]),
+//                        value = it[ContactTable.value],
+//                        personId = it[ContactTable.personId]
+//                    )
+//                }
+//
+//            PersonTable
+//                .select { PersonTable.id eq id }
+//                .singleOrNull()?.let {
+//                    Person(
+//                        id = it[PersonTable.id],
+//                        firstName = it[PersonTable.firstName],
+//                        lastName = it[PersonTable.lastName],
+//                        dateOfBirth = it[PersonTable.dateOfBirth]?.fromLocalDateToKotlinInstant(),
+//                        phone = it[PersonTable.phone],
+//                        contacts = contacts
+//                    )
+//                }
+//        }
+//    }
+
+    override suspend fun getPerson(id: Long): PersonDto? {
         return dbQuery {
-            People
-                .select { People.id eq id }
-                .map(::resultRowToPerson)
+            PersonTable
+                .select { PersonTable.id eq id }
+                .map { it.toPersonDto() }
                 .singleOrNull()
         }
     }
 
-    override suspend fun getPersonAddress(id: Long): PersonWithAddress? {
+    override suspend fun getPersonAddress(id: Long): PersonWithAddressDto? {
         return dbQuery {
-            (People leftJoin Addresses)
-                .select { People.id eq id }
+            (PersonTable leftJoin AddressTable)
+                .select { PersonTable.id eq id }
                 .map(::resultRowToPersonAddress)
                 .singleOrNull()
         }
     }
 
-    override suspend fun addPerson(person: Person, addressId: Long): Person? = dbQuery {
-        val insertStatement = People.insert {
-            it[People.firstName] = person.firstName
-            it[People.lastName] = person.lastName
-            it[People.dateOfBirth] = person.dateOfBirth?.toLocalDateTime(TimeZone.currentSystemDefault())?.date?.toJavaLocalDate()
-            it[People.phone] = person.phone
-            it[People.addressId] = addressId
+    override suspend fun addPerson(personDto: PersonDto): PersonDto? = dbQuery {
+        val insertStatement = PersonTable.insert {
+            it[PersonTable.firstName] = personDto.firstName
+            it[PersonTable.lastName] = personDto.lastName
+            it[PersonTable.dateOfBirth] = personDto.dateOfBirth?.fromStringToLocalDate()
         }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToPerson)
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToPersonDto)
     }
 
-    override suspend fun editPerson(id: Long, person: Person, addressId: Long): Boolean = dbQuery {
-        People.update({ People.id eq id }) {
-            it[People.firstName] = person.firstName
-            it[People.lastName] = person.lastName
-            it[People.dateOfBirth] = person.dateOfBirth?.toLocalDateTime(TimeZone.currentSystemDefault())?.date?.toJavaLocalDate()
-            it[People.phone] = person.phone
-            it[People.addressId] = addressId
+    override suspend fun editPerson(id: Long, personDto: PersonDto): Boolean = dbQuery {
+        PersonTable.update({ PersonTable.id eq id }) {
+            it[PersonTable.firstName] = personDto.firstName
+            it[PersonTable.lastName] = personDto.lastName
+            it[PersonTable.dateOfBirth] = personDto.dateOfBirth?.fromStringToLocalDate()
         } > 0
     }
 
     override suspend fun deletePerson(id: Long): Boolean = dbQuery {
-        People.deleteWhere { People.id eq id } > 0
+        PersonTable.deleteWhere { PersonTable.id eq id } > 0
     }
 
-    private fun resultRowToPerson(row: ResultRow): Person {
-        return Person(
-            id = row[People.id],
-            firstName = row[People.firstName],
-            lastName = row[People.lastName],
-            dateOfBirth = row[People.dateOfBirth]?.fromLocalDateToKotlinInstant(),
-            phone = row[People.phone],
-            addressId = row[People.addressId]
+    private fun resultRowToPersonDto(row: ResultRow): PersonDto {
+        return PersonDto(
+            id = row[PersonTable.id],
+            firstName = row[PersonTable.firstName],
+            lastName = row[PersonTable.lastName],
+            dateOfBirth = row[PersonTable.dateOfBirth]?.fromLocalDateToKotlinInstant()
+                ?.fromKotlinInstantToLocalDateString() ?: "",
         )
     }
 
-    private fun resultRowToPersonAddress(row: ResultRow): PersonWithAddress {
-        return PersonWithAddress(
-            id = row[People.id],
-            firstName = row[People.firstName],
-            lastName = row[People.lastName],
-            dateOfBirth = row[People.dateOfBirth]?.fromLocalDateToKotlinInstant()?.fromKotlinInstantToLocalDateString() ?: "",
-            phone = row[People.phone] ?: "",
-            postCode = row[Addresses.postCode],
-            region = row[Addresses.region],
-            city = row[Addresses.city],
-            street = row[Addresses.street],
-            house = row[Addresses.house],
-            building = row[Addresses.building],
-            flat = row[Addresses.flat]
+    private fun resultRowToPersonAddress(row: ResultRow): PersonWithAddressDto { // удалить после fix edit feature
+        return PersonWithAddressDto(
+            id = row[PersonTable.id],
+            firstName = row[PersonTable.firstName],
+            lastName = row[PersonTable.lastName],
+            dateOfBirth = row[PersonTable.dateOfBirth]?.fromLocalDateToKotlinInstant()
+                ?.fromKotlinInstantToLocalDateString() ?: "",
+            postCode = row[AddressTable.postCode],
+            region = row[AddressTable.region],
+            city = row[AddressTable.city],
+            street = row[AddressTable.street],
+            house = row[AddressTable.house],
+            building = row[AddressTable.building],
+            flat = row[AddressTable.flat]
         )
     }
 }

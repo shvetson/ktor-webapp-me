@@ -1,0 +1,151 @@
+<head th:replace="~{fragments/layout :: headerFragment}">
+    <title id="pageTitle">Edit person</title>
+</head>
+
+<body style="text-align: left; font-family: sans-serif">
+<h3 class="text-center">Информация</h3>
+<hr>
+
+<div class="container">
+    <div>
+        <h4 th:text="${person.lastName}">First Name</h4>
+        <p th:text="${person.firstName}">Last Name</p>
+        <p th:text="${person.dateOfBirth}">Date of birth</p>
+    </div>
+
+    <hr/>
+    <div>
+        <span th:if="${#lists.isEmpty(person.contacts)}">Список контактов пуст!</span>
+    </div>
+
+    <table th:if="${not #lists.isEmpty(person.contacts)}"
+           class="table-responsive table-secondary table-bordered table-striped caption-top">
+        <caption>Список контактов</caption>
+        <thead style="text-align: center;">
+        <th scope="col" style="padding-left: 10px; padding-right: 10px;">#</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Вид</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Данные</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Действия</th>
+        <th scope="col" style="width: auto; padding-left: 10px; padding-right: 10px;">Тип контакта</th>
+        </thead>
+        <tbody>
+        <div th:each="contact, iterStat : ${person.contacts}">
+            <tr style="text-align: center">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${contact.type}" style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td th:text="${contact.value}" style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                <td>
+                    <div class="dropdown">
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                            <i class="bx bx-dots-vertical-rounded"></i></button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" th:href="@{people/{id}/contacts/edit(id=${contact.id})}"><i
+                                    class="bx bx-edit-alt me-1"></i>Edit</a>
+                            <a class="dropdown-item" th:href="@{people/{id}/contacts/delete(id=${contact.id})}"><i
+                                    class="bx bx-trash me-1"></i>Delete</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                            <i class="bx bx-dots-vertical-rounded"></i></button>
+                        <div class="dropdown-menu">
+                            <select class="form-select" id="select" th:field="${contacts}" required>
+                                <option th:each="type : ${contactsTypes}"
+                                        th:value="${type.id}"
+                                        th:utext="${type.name}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+        <tfoot>
+        <td colspan="11">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a th:href="@{people/{id}(id=${person.id})}"
+                   class="btn btn-sm btn-primary justify-content-md-end">Add</a>
+            </div>
+        </td>
+        </tfoot>
+    </table>
+
+    <hr/>
+    <div>
+        <label for="indicationSelect" class="col-3 col-form-label">Вид контакта: </label>
+        <div class="col-9">
+            <select class="form-select" id="indicationSelect" th:field="${contacts}" required>
+                <option selected disabled value="">Выберите ...</option>
+                <option th:each="type : ${contactsTypes}"
+                        th:value="${type.id}"
+                        th:utext="${type.name}">
+                </option>
+            </select>
+        </div>
+
+        <!--        <div th:if="${day == MyEnum.MONDAY}">-->
+        <!--            <span>Happy Monday!</span>-->
+        <!--        </div>-->
+        <!--        <div th:if="${day == MyEnum.FRIDAY}">-->
+        <!--            <span>TGIF!</span>-->
+        <!--        </div>-->
+    </div>
+
+    <br/>
+
+    <div>
+        <label for="coachId" ></label>
+        <div>
+            <select id="coachId" th:field="${contacts}">
+                <option th:each="it : ${contactsTypes}"
+                        th:text="${it.name}"
+                        th:value="${it.id}">
+            </select>
+        </div>
+    </div>
+
+    <hr/>
+    <div>
+        <a th:href="@{~/api/v1/people}" class="btn btn-secondary btn-sm mb-3">Back</a>
+    </div>
+
+
+    <table border="1" cellpadding="10px" cellspacing="5px">
+        <tr>
+            <td>District: </td>
+            <td>
+                <select id="districtlist" name="districtlist" required>
+                    <option disabled selected>Select District</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Taluk: </td>
+            <td>
+                <select id="taluklist" name="taluklist" required>
+                    <option disabled>Select Taluk</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Village: </td>
+            <td>
+                <select id="villagelist" name="villagelist" required>
+                    <option disabled>Select Village</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+
+
+</div>
+
+<div th:insert="~{fragments/layout :: copyright}"></div>
+<th:block th:insert="~{fragments/layout :: script}"></th:block>
+</body>
+</html>

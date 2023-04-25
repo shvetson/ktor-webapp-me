@@ -3,22 +3,104 @@
 </head>
 
 <body style="text-align: left; font-family: sans-serif">
-<h3 class="text-center">Информация</h3>
-<hr>
-
 <div class="container">
+    <h3 class="text-center">Информация</h3>
+    <hr>
+
+    <!--    Общая информация-->
     <div>
-        <h4 th:text="${person.lastName}">First Name</h4>
-        <p th:text="${person.firstName}">Last Name</p>
-        <p th:text="${person.dateOfBirth}">Date of birth</p>
+        <!--        <h4 th:text="${person.lastName}">First Name</h4>-->
+        <!--        <p th:text="${person.firstName}">Last Name</p>-->
+        <!--        <p th:text="${person.dateOfBirth}">Date of birth</p>-->
+
+        <span>Фамилия: </span><b><span th:text="${person.lastName}"></span></b><br/>
+        <span>Имя: </span><b><span th:text="${person.firstName}"></span></b><br/>
+        <span>Дата рождения: </span><b><span th:text="${person.dateOfBirth}"></span></b><br/>
     </div>
-        <hr>
+
+    <!--    Список адресов-->
+    <hr/>
     <div>
-        <a th:href="@{~/api/v1/people}" class="btn btn-secondary btn-sm mb-3">Back</a>
+        <span th:if="${#lists.isEmpty(person.addresses)}">Список адресов пуст!</span>
     </div>
+
+    <div class="table-responsive">
+        <table th:if="${not #lists.isEmpty(person.addresses)}"
+               class="table table-sm table-bordered table-striped caption-top">
+            <caption>Список адресов</caption>
+            <thead class="table-light" style="text-align: center;">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Индекс</th>
+                <th scope="col">Регион</th>
+                <th scope="col">Город</th>
+                <th scope="col">Улица</th>
+                <th scope="col">Дом</th>
+                <th scope="col">Строение</th>
+                <th scope="col">Квартира</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <div th:each="address, iterStat : ${person.addresses}">
+                <tr style="text-align: center">
+                    <th scope="row" th:text="${iterStat.index + 1}"></th>
+                    <td th:text="${address.postCode}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.region}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.city}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.street}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.house}"
+                        style="text-align: end; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.building}"
+                        style="text-align: end; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${address.flat}"
+                        style="text-align: end; padding-left: 10px; padding-right: 10px;"></td>
+                </tr>
+            </div>
+            </tbody>
+        </table>
+    </div>
+
+    <!--    Список контактов-->
+    <hr/>
+    <div>
+        <span th:if="${#lists.isEmpty(person.contacts)}">Список контактов пуст!</span>
+    </div>
+
+    <div class="table-responsive col-4">
+        <table th:if="${not #lists.isEmpty(person.contacts)}" class="table table-sm table-bordered table-striped caption-top">
+            <caption>Список контактов</caption>
+            <thead class="table-light" style="text-align: center;">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Вид</th>
+                <th scope="col">Данные</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <div th:each="contact, iterStat : ${person.contacts}">
+                <tr style="text-align: center">
+                    <th scope="row" th:text="${iterStat.index + 1}"></th>
+                    <td th:text="${contact.type}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                    <td th:text="${contact.data}"
+                        style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                </tr>
+            </div>
+            </tbody>
+        </table>
+    </div>
+
+    <hr/>
+    <div>
+        <a th:href="@{~/api/v1/people}" class="btn btn-secondary mb-3">Back</a>
+    </div>
+
 </div>
 
 <div th:insert="~{fragments/layout :: copyright}"></div>
 <th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
-</html>

@@ -53,7 +53,7 @@ object DatabaseFactory {
 
         transaction(database) {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create (Cities, Addresses, People, Users)
+            SchemaUtils.create(AddressTable, PersonTable, ContactTypeTable, ContactTable)
         }
     }
 

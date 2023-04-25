@@ -3,10 +3,10 @@
 </head>
 
 <body style="text-align: left; font-family: sans-serif">
-<h3 class="text-center">Новая персона</h3>
-<hr>
-
 <div class="container">
+    <h3 class="text-center">Новая персона</h3>
+    <hr>
+
     <form th:replace="~{fragments/formPerson ::formFragment(url=@{~/api/v1/people/new})}">
     </form>
 </div>

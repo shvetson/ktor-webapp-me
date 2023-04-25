@@ -1,9 +1,8 @@
 package ru.shvets.common.model
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
-import ru.shvets.common.model.People.autoIncrement
 
 /**
  * @author  Oleg Shvets
@@ -14,6 +13,7 @@ import ru.shvets.common.model.People.autoIncrement
 @Serializable
 data class Address(
     val id: Long = 0L,
+    val personId: Long = 0L,
     val postCode: Int,
     val region: String,
     val city: String,
@@ -23,8 +23,10 @@ data class Address(
     val flat: String,
 )
 
-object Addresses : Table("addresses") {
-    val id = long("id").autoIncrement()
+object AddressTable : Table("addresses") {
+    val id = long("id").autoIncrement().uniqueIndex()
+    val personId = long("person_id")
+        .references(PersonTable.id, onDelete = ReferenceOption.CASCADE, onUpdate = ReferenceOption.CASCADE)
     val postCode = integer("post_code")
     val region = varchar("region", 50)
     val city = varchar("city", 50)

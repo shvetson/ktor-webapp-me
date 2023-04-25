@@ -1,6 +1,7 @@
 package ru.shvets.common.dto
 
 import kotlinx.serialization.Serializable
+import ru.shvets.common.model.Contact
 import ru.shvets.common.model.Person
 import ru.shvets.common.util.fromKotlinInstantToLocalDateString
 
@@ -12,18 +13,10 @@ import ru.shvets.common.util.fromKotlinInstantToLocalDateString
 
 @Serializable
 data class PersonDto(
-    val id: Long,
+    val id: Long? = 0L,
     val firstName: String,
     val lastName: String,
-    val dateOfBirth: String,
-    val phone: String,
+    val dateOfBirth: String? = null,
+    val addresses: List<AddressDto>? =  null,
+    val contacts: List<ContactDto>? = null
 )
-
-fun Person.toDto(): PersonDto =
-    PersonDto(
-        id = this.id,
-        firstName = this.firstName,
-        lastName = this.lastName,
-        dateOfBirth = this.dateOfBirth?.fromKotlinInstantToLocalDateString() ?: "",
-        phone = this.phone ?: ""
-    )

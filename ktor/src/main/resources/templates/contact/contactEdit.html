@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="~{fragments/layout :: headerFragment}">
+    <title id="pageTitle">Edit contact</title>
+</head>
+
+<body style="text-align: left; font-family: sans-serif">
+<div class="container">
+    <h3 class="text-center">Редактирование контактной информации</h3>
+    <hr>
+
+    <form class="form form-horizontal" th:action="@{~/api/v1/contacts/{id}(id=${contact.id})}" th:object="${contact}"
+          method="post">
+        <!--        <input type="hidden" id="personId" name="personId" th:value="${contact.personId}">-->
+        <div class="mb-3 row">
+            <label for="typeId" class="col-sm-1 col-form-label">Вид: </label>
+            <div class="col-sm-2">
+                <select class="form-select" id="typeId" th:name="typeId" th:value="${contact.typeId}" required>
+                    <option selected disabled value="">Выберите ...</option>
+                    <option th:each="type : ${contactsTypes}"
+                            th:value="${type.id}"
+                            th:utext="${type.name}"
+                            th:selected="${contact.typeId} eq ${type.id}"></option>
+                </select>
+            </div>
+
+            <label for="data" class="col-sm-1 col-form-label">Данные: </label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="data" th:name="data" th:value="${contact.data}" required>
+                <div id="dataHelp" class="form-text">Формат: +7(912)456-78-90 или person@mail.com или @person></div>
+            </div>
+        </div>
+
+        <hr/>
+        <div>
+            <button type="submit" class="btn btn-primary mb-3">Save</button>
+            <a th:href="@{~/api/v1/people/{personId}/edit(personId=${personId})}" class="btn btn-secondary mb-3">Back</a>
+        </div>
+    </form>
+</div>
+
+<div th:insert="~{fragments/layout :: copyright}"></div>
+<th:block th:insert="~{fragments/layout :: script}"></th:block>
+</body>
+</html>

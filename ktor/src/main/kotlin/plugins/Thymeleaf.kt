@@ -1,4 +1,5 @@
 package ru.shvets.ktor.plugins
+
 import io.ktor.server.application.*
 import io.ktor.server.thymeleaf.*
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver

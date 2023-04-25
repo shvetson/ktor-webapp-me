@@ -1,5 +1,6 @@
 package ru.shvets.ktor.dao
 
+import ru.shvets.common.dto.AddressDto
 import ru.shvets.common.model.Address
 
 /**
@@ -9,7 +10,9 @@ import ru.shvets.common.model.Address
  */
 
 interface DAOAddress {
-    suspend fun addAddress(address: Address): Address?
-    suspend fun editAddress(id: Long, address: Address): Boolean
-    suspend fun deleteAddress(id: Long): Boolean
+
+    suspend fun getAddress(personId: Long): AddressDto?
+    suspend fun addAddress(personId: Long, addressDto: AddressDto): Address?
+    suspend fun editAddress(addressDto: AddressDto): Boolean
+    suspend fun deleteAddress(personId: Long): Boolean
 }

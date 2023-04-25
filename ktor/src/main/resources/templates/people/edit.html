@@ -3,15 +3,164 @@
 </head>
 
 <body style="text-align: left; font-family: sans-serif">
-<h3 class="text-center">Редактирование данных</h3>
-<hr>
-
 <div class="container">
-    <form th:replace="~{fragments/formPerson ::formFragment(url=@{~/api/v1/people/{id}(id=${person.id})})}">
+    <h3 class="text-center">Редактирование данных</h3>
+    <hr>
+
+    <form class="form form-horizontal" th:action="@{~/api/v1/people/{id}(id=${person.id})}"
+          th:object="${person}" method="post">
+
+        <!--    Общая инфо-->
+        <h5 class="text-left"><b>Персона</b></h5>
+        <div class="mb-3 row">
+            <label for="firstName" class="col-sm-1 col-form-label">Имя: </label>
+            <div class="col-sm-2">
+                <input class="form-control" type="text" id="firstName" th:name="firstName"
+                       th:value="${person != null} ? ${person.firstName} : ''" required>
+            </div>
+
+            <label for="lastName" class="col-sm-1 col-form-label">Фамилия: </label>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" id="lastName" th:name="lastName"
+                       th:value="${person != null} ? ${person.lastName} : ''" required>
+            </div>
+
+            <label for="dateOfBirth" class="col-sm-2 col-form-label">Дата рождения: </label>
+            <div class="col-sm-2">
+                <input class="form-control" type="date" id="dateOfBirth" th:name="dateOfBirth"
+                       th:value="${person != null} ? ${person.dateOfBirth} : ''" required>
+                <div id="dateOfBirthHelp" class="form-text">Формат: мм/дд/гггг</div>
+            </div>
+
+            <div class="col-sm-1 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary mb-3">Save</button>
+                <!--    <button th:if="${person != null}" type="submit" class="btn btn-danger mb-3" name="_action" value="delete">Delete</button>-->
+            </div>
+        </div>
+
+
     </form>
+
+    <hr/>
+    <form class="form form-horizontal" th:action="@{~/api/v1/people/{id}/address/edit(id=${person.id})}"
+          th:object="${address}" method="post">
+        <input type="hidden" id="id" name="id" th:value="${address.id}">
+        <h5 class="text-left"><b>Адрес</b></h5>
+        <div class="mb-3 row">
+            <label for="postCode" class="col-sm-1 col-form-label">Индекс: </label>
+            <div class="col-sm-2">
+                <input class="form-control" type="text" id="postCode" th:name="postCode"
+                       th:value="${address != null} ? ${address.postCode} : ''"
+                       pattern="\d{6}" required>
+                <div id="postCodeHelp" class="form-text">Формат: 6 цифр</div>
+            </div>
+
+            <label for="region" class="col-sm-1 col-form-label">Регион: </label>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" id="region" th:name="region"
+                       th:value="${address != null} ? ${address.region} : ''" required>
+            </div>
+
+            <label for="city" class="col-sm-1 col-form-label">Город: </label>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" id="city" th:name="city"
+                       th:value="${address != null} ? ${address.city} : ''" required>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="street" class="col-sm-1 col-form-label">Улица: </label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" id="street" th:name="street"
+                       th:value="${address != null} ? ${address.street} : ''" required>
+            </div>
+
+            <label for="house" class="col-sm-1 col-form-label">Дом: </label>
+            <div class="col-sm-1">
+                <input class="form-control" type="text" id="house" th:name="house"
+                       th:value="${address != null} ? ${address.house} : ''" required>
+            </div>
+
+            <label for="building" class="col-sm-1 col-form-label">Корпус: </label>
+            <div class="col-sm-1">
+                <input class="form-control" type="text" id="building" th:name="building"
+                       th:value="${address != null} ? ${address.building} : ''" required>
+            </div>
+
+            <label for="flat" class="col-sm-1 col-form-label">Квартира: </label>
+            <div class="col-sm-1">
+                <input class="form-control" type="text" id="flat" th:name="flat"
+                       th:value="${address != null} ? ${address.flat} : ''" required>
+            </div>
+
+            <div class="col-sm-1 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary mb-3">Save</button>
+                <!--    <button th:if="${person != null}" type="submit" class="btn btn-danger mb-3" name="_action" value="delete">Delete</button>-->
+            </div>
+        </div>
+    </form>
+
+    <!--    Контакты-->
+    <hr/>
+    <div class="row">
+        <h5 class="text-left"><b>Контакты</b></h5>
+
+        <div th:if="${#lists.isEmpty(contacts)}">
+            <span>Список контактов пуст!</span>
+            <a th:href="@{~/api/v1/people/{id}/contact(id=${person.id})}"
+               class="btn btn-primary justify-content-md-end ms-5">Add</a>
+        </div>
+
+        <div class="table-responsive col-6">
+            <table th:if="${not #lists.isEmpty(contacts)}"
+                   class="table table-sm table-bordered table-striped align-middle">
+                <thead class="table-light" style="text-align: center;">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Вид</th>
+                    <th scope="col">Данные</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="contact, iterStat : ${contacts}">
+                    <tr style="text-align: center">
+                        <th scope="row" th:text="${iterStat.index + 1}"></th>
+                        <td th:text="${contact.type}"
+                            style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+                        <td th:text="${contact.data}"
+                            style="text-align: start; padding-left: 10px; padding-right: 10px;"></td>
+<!--                        <td style="text-align: center"><a th:href="@{~/api/v1/contacts/{id}/edit(id=${contact.id})}">-->
+<!--                            <i class="fa fa-edit" style="font-size:20px"></i></a></td>-->
+                        <td style="text-align: center"><a th:href="@{~/api/v1/people/{personId}/contact/{contactId}/edit(personId=${person.id}, contactId=${contact.id})}">
+                            <i class="fa fa-edit" style="font-size:20px"></i></a></td>
+                        <td style="text-align: center"><a th:href="@{~/api/v1/contacts/{id}/delete(id=${contact.id})}">
+                            <i class="fa fa-trash" style="font-size:20px"></i></a>
+                        </td>
+                    </tr>
+                </div>
+                </tbody>
+                <tfoot>
+                <td colspan="5">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a th:href="@{~/api/v1/people/{id}/contact(id=${person.id})}"
+                           class="btn btn-sm btn-primary justify-content-md-end">Add</a>
+                    </div>
+                </td>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+
+    <hr/>
+    <div>
+        <a th:href="@{~/api/v1/people}" class="btn btn-secondary mb-3">Back</a>
+    </div>
+
 </div>
 
 <div th:insert="~{fragments/layout :: copyright}"></div>
 <th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
-</html>
