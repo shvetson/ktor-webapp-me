@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head th:replace="~{fragments/layout :: headerFragment}">
     <title id="pageTitle">Edit person</title>
 </head>
@@ -96,7 +101,7 @@
 
     <hr/>
     <div>
-        <a th:href="@{~/api/v1/people}" class="btn btn-secondary mb-3">Back</a>
+        <a th:href="@{~/api/v1/people/index}" class="btn btn-secondary mb-3">Back</a>
     </div>
 
 </div>
@@ -104,3 +109,5 @@
 <div th:insert="~{fragments/layout :: copyright}"></div>
 <th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
+
+</html>

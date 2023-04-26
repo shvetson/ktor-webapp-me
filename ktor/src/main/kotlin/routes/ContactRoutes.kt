@@ -4,15 +4,8 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.thymeleaf.*
 import io.ktor.server.util.*
-import ru.shvets.ktor.config.Log.logger
-import ru.shvets.ktor.dao.daoAddress
 import ru.shvets.ktor.dao.daoContact
-import ru.shvets.ktor.dao.daoPerson
-import ru.shvets.ktor.utils.createAddress
-import ru.shvets.ktor.utils.createContact
-import ru.shvets.ktor.utils.createPerson
 
 /**
  * @author  Oleg Shvets
@@ -23,13 +16,8 @@ import ru.shvets.ktor.utils.createPerson
 fun Route.contactsRouting() {
     route("contacts") {
 
-//        get("") {
-////            val model = emptyMap<String, Any>()
-//            val contactsTypes = daoPerson.getAllContactsTypes()
-//            val model = mapOf("contactsTypes" to contactsTypes)
-//            call.respond(ThymeleafContent("/people/new.html", model))
-//        }
-//
+        // добавление нового контакта (сохранение в базе данных)
+        // и возврат на страницу редактирования информации
         post() {
             val formParameters = call.receiveParameters()
             val personId = formParameters.getOrFail("personId").toLong()
@@ -38,24 +26,9 @@ fun Route.contactsRouting() {
             daoContact.addContact(personId, typeId, data)
             call.respondRedirect("/api/v1/people/$personId/edit")
         }
-//
-//        get("{id}") {
-//            // val id = call.parameters.getOrFail<Int>("id").toInt()
-//            val id = call.parameters["id"]?.toLongOrNull() ?: throw Exception("Invalid person id")
-//            val person = daoPerson.getPerson(id).takeIf { it != null } ?: throw Exception("Invalid person id")
-//            val model = mapOf("person" to person)
-//            call.respond(ThymeleafContent("/people/show.html", model))
-//        }
 
-        // удалить
-        get("{id}/edit") {
-            val id = call.parameters.getOrFail<Long>("id").toLong()
-            val contact = daoContact.getContact(id).takeIf { it != null } ?: throw Exception("Invalid contact id")
-            val contactsTypes = daoContact.getAllContactsTypes()
-            val model = mapOf("contact" to contact, "contactsTypes" to contactsTypes)
-            call.respond(ThymeleafContent("/contact/contactEdit.html", model))
-        }
-
+        // корректировка контактной информации (сохранение изменений в базе данных)
+        // и возврат на страницу редактирования информации
         post("{id}") {
             val id = call.parameters.getOrFail<Long>("id").toLong()
             val formParameters = call.receiveParameters()
@@ -66,6 +39,7 @@ fun Route.contactsRouting() {
             call.respondRedirect("/api/v1/people/$personId/edit")
         }
 
+        // удаление записи по id контакта и возврат на страницу редактирования информации
         get("{id}/delete") {
             val id = call.parameters["id"]?.toLongOrNull() ?: throw Exception("Invalid contact id")
             val personId = daoContact.getPersonIdByContactId(id)

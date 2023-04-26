@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head th:replace="~{fragments/layout :: headerFragment}">
     <title id="pageTitle">New person</title>
 </head>
@@ -14,4 +19,5 @@
 <div th:insert="~{fragments/layout :: copyright}"></div>
 <th:block th:insert="~{fragments/layout :: script}"></th:block>
 </body>
+
 </html>

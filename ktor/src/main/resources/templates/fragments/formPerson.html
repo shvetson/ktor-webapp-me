@@ -111,18 +111,6 @@
     <div>
         <button type="submit" class="btn btn-primary mb-3" name="_action" value="save">Save</button>
         <!--    <button th:if="${person != null}" type="submit" class="btn btn-danger mb-3" name="_action" value="delete">Delete</button>-->
-        <a th:href="@{~/api/v1/people}" class="btn btn-secondary mb-3">Back</a>
+        <a th:href="@{~/api/v1/people/index}" class="btn btn-secondary mb-3">Back</a>
     </div>
 </form>
-
-<!--<form id="outer-form" class="form-horizontal form" th:action="@{/urlOuter}" th:object="${myBackBeanObject}" method="post">-->
-<!--    <fieldset id="form-fieldset1">-->
-<!--        <button id="save1" name="save" class="btn btn-primary">Outer Save</button>-->
-<!--    </fieldset>-->
-<!--</form>-->
-
-<!--<form id="inner-form" class="form-horizontal form" th:action="@{/urlInner}" th:object="${myBackBeanObject}" method="post">-->
-<!--    <fieldset id="form-fieldset2">-->
-<!--        <button id="save2" name="save" class="btn btn-primary">inner Save</button>-->
-<!--    </fieldset>-->
-<!--</form>-->
